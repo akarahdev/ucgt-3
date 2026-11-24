@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UCGTController {
     @GetMapping("/v1/hello")
-    public String hello() {
-        return "Hello there!";
+    public HelloWorldResponse hello() {
+        return new HelloWorldResponse("world");
     }
 }
