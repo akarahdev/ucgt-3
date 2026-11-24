@@ -1,18 +1,18 @@
 playerevent leftClick {
     if(player.mainHandItem.hasTag("type", "sword") && player.itemIsNotOnCooldown(player.mainHandItem)) {
         player.setItemCooldown(player.mainHandItem, 10);
-        attack_melee();
+        attackMelee();
     }
 }
 
 playerevent rightClick {
     if(player.mainHandItem.hasTag("type", "bow") && player.itemIsNotOnCooldown(player.mainHandItem)) {
         player.setItemCooldown(player.mainHandItem, 10);
-        attack_shoot();
+        attackShoot();
     }
 }
 
-function attack_melee() {
+function attackMelee() {
     line stats = calculateStats();
 
     line eyePos = player.eyeLocation;
@@ -57,7 +57,7 @@ function attack_melee() {
     }
 }
 
-function attack_shoot() {
+function attackShoot() {
     line stats = calculateStats();
 
     line pos = player.eyeLocation;

@@ -2,7 +2,7 @@ gameevent startup {
     declare global port: num = 37615;
     declare global webUrl: str = "http://bigcircl.akarah.net";
 
-    enqueue_init();
+    enqueueInit();
     registries_init();
 }
 
