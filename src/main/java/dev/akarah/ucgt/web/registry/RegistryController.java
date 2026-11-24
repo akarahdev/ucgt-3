@@ -1,6 +1,5 @@
 package dev.akarah.ucgt.web.registry;
 
-import dev.akarah.ucgt.web.util.Count;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -16,8 +15,8 @@ public class RegistryController {
     }
 
     @GetMapping("/count/{registry}")
-    public Count count(@PathVariable String registry) {
-        return new Count(registries.allRegistries.getOrThrow(registry).size());
+    public int count(@PathVariable String registry) {
+        return registries.allRegistries.getOrThrow(registry).size();
     }
 
     @SuppressWarnings("unchecked")

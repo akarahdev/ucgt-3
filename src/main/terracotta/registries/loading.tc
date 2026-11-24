@@ -5,7 +5,9 @@ function registries_init() {
 
     declare global registries: dict[str] = {
         "item_type": "Item Type",
-        "mob_type": "Mob Type"
+        "mob_type": "Mob Type",
+        "region": "Region",
+        "banner": "Banner"
     };
 
     for(line registryId, line registryName of registries) {
@@ -13,7 +15,7 @@ function registries_init() {
         allPlayers.givePotionEffect(pot("blindness", 100, 100), particles = "None");
         allPlayers.sendTitle(s"<gray>Loading " + registryName + "s", s"<gray>...", 10, 0, 0);
 
-        line count = enqueue_request_blocking("GET", "/v1/registry/count/" + registryId, {})["count"] as num;
+        line count = enqueue_request_blocking("GET", "/v1/registry/count/" + registryId, {}) as num;
 
         for(line page of range(0, num.ceil(count / pageSize))) {
             allPlayers.teleport(loc(10, 50, 10));
@@ -37,5 +39,6 @@ function registries_init() {
     }
 
     allPlayers.clearPotionEffects();
+    allPlayers.teleport(loc(500.5, 50, 500.5, 0, 180));
 }
 

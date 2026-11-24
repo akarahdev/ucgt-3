@@ -1,14 +1,3 @@
-playerevent join {
-    line sword = item("diamond_sword");
-    sword = sword.setTag("type", "sword");
-    line bow = item("bow");
-    bow = bow.setTag("type", "bow");
-    player.giveItems(sword);
-    player.giveItems(bow);
-    player.setCombatAttribute(1024, attr = "Attack speed");
-    player.setReachAttribute(0, attr = "Entity interaction range");
-}
-
 playerevent leftClick {
     if(player.mainHandItem.hasTag("type", "sword") && player.itemIsNotOnCooldown(player.mainHandItem)) {
         player.setItemCooldown(player.mainHandItem, 10);

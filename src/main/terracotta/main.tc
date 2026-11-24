@@ -6,6 +6,12 @@ gameevent startup {
     registries_init();
 }
 
+playerevent join {
+    player.setCombatAttribute(1024, attr = "Attack speed");
+    player.setReachAttribute(0, attr = "Entity interaction range");
+    player.setReachAttribute(0, attr = "Block interaction range");
+}
+
 playerevent command {
     if(event.commandArgumentEquals("summon", 1)) {
         line mt = event.commandArguments[2];
@@ -15,6 +21,10 @@ playerevent command {
         line it = event.commandArguments[2];
         player.giveItems(buildItemFromType(it));
     }
+}
+
+playerevent exhaustion {
+    event.cancel();
 }
 
 playerevent swapHands {

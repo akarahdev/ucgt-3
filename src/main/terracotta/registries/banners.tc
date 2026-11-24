@@ -1,0 +1,11 @@
+function getBanner(id: str): {
+    name: str,
+    cost: num,
+    weights: dict[num]
+} {
+    return global "registry.banner.%var(id)" as {
+        name: str,
+        cost: num,
+        weights: dict[num]
+    };
+}

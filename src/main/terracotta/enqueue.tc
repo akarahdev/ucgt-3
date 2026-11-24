@@ -7,7 +7,7 @@ function enqueue_request_blocking(
     method: str,
     path: str,
     body: dict
-): dict {
+): any {
     global requests: list[{id: num, method: str, endpoint: str, body: str}];
 
     global enqueueIdTracker: num;

@@ -1,0 +1,16 @@
+function getRegion(id: str): {
+    name: str,
+    corner1: loc,
+    corner2: loc
+} {
+    line base = global "registry.region.%var(id)" as {
+        name: str,
+        corner1: { x: num, y: num, z: num },
+        corner2: { x: num, y: num, z: num }
+    };
+    return {
+        name: base["name"],
+        corner1: loc(base["corner1"]["x"], base["corner1"]["y"], base["corner1"]["z"]),
+        corner2: loc(base["corner1"]["x"], base["corner1"]["y"], base["corner1"]["z"])
+    };
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Wooden Bow",
+  "type": "bow",
+  "model": "minecraft:bow",
+  "stats": {
+    "attack_damage": 4
+  }
+}

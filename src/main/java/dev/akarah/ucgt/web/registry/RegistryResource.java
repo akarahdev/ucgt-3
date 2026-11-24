@@ -1,7 +1,9 @@
 package dev.akarah.ucgt.web.registry;
 
+import dev.akarah.ucgt.web.registry.types.Banner;
 import dev.akarah.ucgt.web.registry.types.ItemType;
 import dev.akarah.ucgt.web.registry.types.MobType;
+import dev.akarah.ucgt.web.registry.types.Region;
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -19,8 +21,9 @@ import java.util.Map;
 @Component
 public class RegistryResource {
     public Registry<ItemType> itemTypes = loadFromClasspath(ItemType.class, "item_type");
-
     public Registry<MobType> mobTypes = loadFromClasspath(MobType.class, "mob_type");
+    public Registry<Banner> banners = loadFromClasspath(Banner.class, "banner");
+    public Registry<Region> regions = loadFromClasspath(Region.class, "region");
 
     public Registry<Registry<?>> allRegistries = new Registry<Registry<?>>() {
         @Override
@@ -29,6 +32,8 @@ public class RegistryResource {
                 case "registries" -> allRegistries;
                 case "item_type" -> itemTypes;
                 case "mob_type" -> mobTypes;
+                case "banner" -> banners;
+                case "region" -> regions;
                 default -> null;
             };
         }
