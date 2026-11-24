@@ -1,11 +1,11 @@
-package com.example;
+package dev.akarah.ucgt.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class UnifiedApplication {
-    public static void main(String[] args) {
+    static void main() {
         SpringApplication.run(UnifiedApplication.class);
     }
 }

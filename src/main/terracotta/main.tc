@@ -1,6 +1,6 @@
 gameevent startup {
-    declare global port: num = 8080;
-    declare global webUrl: str = "URL HERE";
+    declare global port: num = 35857;
+    declare global webUrl: str = "http://bigcircl.akarah.net";
 }
 
 function request(path: str): any {
