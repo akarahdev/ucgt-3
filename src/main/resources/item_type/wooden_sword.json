@@ -1,0 +1,8 @@
+{
+  "name": "Wooden Sword",
+  "model": "minecraft:wooden_sword",
+  "description": "mraow :3",
+  "stats": {
+    "attack_damage": 5
+  }
+}

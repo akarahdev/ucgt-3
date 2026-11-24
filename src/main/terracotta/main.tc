@@ -3,27 +3,5 @@ gameevent startup {
     declare global webUrl: str = "http://bigcircl.akarah.net";
 
     enqueue_init();
-}
-
-playerevent sneak {
-    line resp = var.getWebResponse(
-        webUrl + ":" + port + "/v1/hello",
-        "",
-        method = "Get"
-    );
-    print(resp);
-    wait(5);
-
-    for(line idx of range(1, 1000)) {
-        enqueue_request_and_forget("GET", "/v1/hello", {});
-    }
-
-    for(line idx of range(1, 10)) {
-        start testsend();
-    }
-}
-
-process testsend {
-    line data = enqueue_request_blocking("GET", "/v1/hello", {});
-    print(data);
+    registries_init();
 }
