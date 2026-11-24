@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Set;
 
 @Component
-public class IPWhitelistResponseFilter extends OncePerRequestFilter {
+public class PlotWhitelistResponseFilter extends OncePerRequestFilter {
     private static final Set<String> ALLOWED_IP_ADDRESSES = Set.of(
             "51.222.245.229",
             "51.222.244.138",
@@ -21,15 +21,26 @@ public class IPWhitelistResponseFilter extends OncePerRequestFilter {
             "0:0:0:0:0:0:0:1"
     );
 
+    private static final String ALLOWED_PLOT = "Hypercube/9.0 (374331, Endistic)";
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String ip = request.getRemoteAddr();
         if(!ALLOWED_IP_ADDRESSES.contains(ip.trim())) {
-            LoggerFactory.getLogger(IPWhitelistResponseFilter.class)
+            LoggerFactory.getLogger(PlotWhitelistResponseFilter.class)
                     .info("Invalid IP {} attempted to connect, blocking.", ip);
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
+
+        String userAgent = request.getHeader("User-Agent");
+        if(!ALLOWED_PLOT.equals(userAgent)) {
+            LoggerFactory.getLogger(PlotWhitelistResponseFilter.class)
+                    .info("Invalid user agent {} attempted to connect, blocking.", userAgent);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
         filterChain.doFilter(request, response);
     }
 }
