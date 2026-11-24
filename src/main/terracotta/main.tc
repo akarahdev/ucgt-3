@@ -12,6 +12,9 @@ function request(path: str): any {
 }
 
 playerevent join {
-    line req = request("/v1/hello");
-    player.sendMessage(req);
+    repeat {
+        line req = request("/v1/hello");
+        player.sendMessage(req);
+        wait(1);
+    }
 }
