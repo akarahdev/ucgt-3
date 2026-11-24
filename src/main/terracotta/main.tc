@@ -5,3 +5,18 @@ gameevent startup {
     enqueue_init();
     registries_init();
 }
+
+playerevent command {
+    if(event.commandArgumentEquals("summon", 1)) {
+        line mt = event.commandArguments[2];
+        spawnMobFromType(mt, player.eyeLocation);
+    }
+    if(event.commandArgumentEquals("give", 1)) {
+        line it = event.commandArguments[2];
+        player.giveItems(buildItemFromType(it));
+    }
+}
+
+playerevent swapHands {
+    event.cancel();
+}

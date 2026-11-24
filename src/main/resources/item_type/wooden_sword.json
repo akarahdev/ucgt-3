@@ -1,5 +1,6 @@
 {
   "name": "Wooden Sword",
+  "type": "sword",
   "model": "minecraft:wooden_sword",
   "description": "mraow :3",
   "stats": {

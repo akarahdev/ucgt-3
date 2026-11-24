@@ -31,10 +31,11 @@ function registries_init() {
             ) as dict;
 
             for(line key, line data of registryData) {
-                global "registry.%var(key)" = data;
+                global "registry.%var(registryId).%var(key)" = data;
             }
         }
     }
 
     allPlayers.clearPotionEffects();
 }
+

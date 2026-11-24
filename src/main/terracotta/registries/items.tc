@@ -1,0 +1,29 @@
+function getItemType(id: str): {
+    name: str,
+    type: str,
+    model: str,
+    description: str,
+    stats: dict[num]
+} {
+    return global "registry.item_type.%var(id)" as {
+        name: str,
+        type: str,
+        model: str,
+        description: str,
+        stats: dict[num]
+    };
+}
+
+function buildItemFromType(id: str): item {
+    line itemType = getItemType(id);
+
+    line i = item("music_disc_cat");
+    i = i.setName(txt.parseExpression("<white>" + itemType["name"]));
+    i = i.setTag("id", id);
+    print(itemType);
+    i = i.setTag("type", itemType["type"]);
+    i = i.setModel(itemType["model"]);
+    i = i.setHiddenComponents("minecraft:music_disc");
+
+    return i;
+}

@@ -9,14 +9,6 @@ playerevent join {
     player.setReachAttribute(0, attr = "Entity interaction range");
 }
 
-playerevent command {
-    game.spawnMob(
-        item("zombie_spawn_egg"),
-        player.location
-    );
-    lastEntity.setEquipmentItem(item("acacia_button"), slot = "Head");
-}
-
 playerevent leftClick {
     if(player.mainHandItem.hasTag("type", "sword") && player.itemIsNotOnCooldown(player.mainHandItem)) {
         player.setItemCooldown(player.mainHandItem, 10);
@@ -32,13 +24,15 @@ playerevent rightClick {
 }
 
 function attack_melee() {
+    line stats = calculateStats();
+
     line eyePos = player.eyeLocation;
 
     select allEntities();
     filter byRaycast(eyePos, 3, 1, 1000);
 
     entity.setInvulnerabilityTicks(0);
-    entity.damage(1, player.uuid);
+    entity.damage(stats["attack_damage"], player.uuid);
 
     select reset();
 
@@ -75,6 +69,8 @@ function attack_melee() {
 }
 
 function attack_shoot() {
+    line stats = calculateStats();
+
     line pos = player.eyeLocation;
     line dy = 0;
 
@@ -93,7 +89,7 @@ function attack_shoot() {
         filter byCondition(entity.isHitboxNearLocation(pos, 0.5));
         if(game.selectionSize >= 1) {
             selectedEntity.setInvulnerabilityTicks(0);
-            selectedEntity.damage(1, player.uuid);
+            selectedEntity.damage(stats["attack_damage"], player.uuid);
             break;
         }
         select reset();

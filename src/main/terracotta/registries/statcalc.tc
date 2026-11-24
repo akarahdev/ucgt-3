@@ -1,0 +1,26 @@
+function calculateStats(): dict[num] {
+    line stats: dict[num] = {
+        "max_health": 100
+    };
+
+    line items: list[item] = [
+        player.mainHandItem,
+        player.offHandItem
+    ];
+    items.append(player.armorItems);
+
+    for(line i of items) {
+        line id = i.getTag("id") as str;
+        if(id != 0) {
+            line it = getItemType(id);
+            line incStats: dict[num] = it["stats"];
+            for(line k, line v of incStats) {
+                if(!stats.hasKey(k)) {
+                    stats[k] = v;
+                } else {
+                    stats[k] = stats[k] + v;
+                }
+            }
+        }
+    }
+}
