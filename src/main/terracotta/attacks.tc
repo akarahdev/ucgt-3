@@ -1,14 +1,48 @@
 playerevent join {
-    player.giveItems(item("diamond_sword"));
+    line sword = item("diamond_sword");
+    sword = sword.setTag("type", "sword");
+    line bow = item("bow");
+    bow = bow.setTag("type", "bow");
+    player.giveItems(sword);
+    player.giveItems(bow);
     player.setCombatAttribute(1024, attr = "Attack speed");
+    player.setReachAttribute(0, attr = "Entity interaction range");
+}
+
+playerevent command {
+    game.spawnMob(
+        item("zombie_spawn_egg"),
+        player.location
+    );
+    lastEntity.setEquipmentItem(item("acacia_button"), slot = "Head");
 }
 
 playerevent leftClick {
-    attack_melee();
+    if(player.mainHandItem.hasTag("type", "sword") && player.itemIsNotOnCooldown(player.mainHandItem)) {
+        player.setItemCooldown(player.mainHandItem, 10);
+        attack_melee();
+    }
+}
+
+playerevent rightClick {
+    if(player.mainHandItem.hasTag("type", "bow") && player.itemIsNotOnCooldown(player.mainHandItem)) {
+        player.setItemCooldown(player.mainHandItem, 10);
+        attack_shoot();
+    }
 }
 
 function attack_melee() {
-    line angle1 = num.random(0, 3.142, rounding = "Decimal number");
+    line eyePos = player.eyeLocation;
+
+    select allEntities();
+    filter byRaycast(eyePos, 3, 1, 1000);
+
+    entity.setInvulnerabilityTicks(0);
+    entity.damage(1, player.uuid);
+
+    select reset();
+
+    line angle1 = num.random(0, 6.283, rounding = "Decimal number");
     line angle2 = angle1 + 3.142;
 
     line a1x = angle1.cos(unit = "Radians");
@@ -17,7 +51,7 @@ function attack_melee() {
     line a2x = angle2.cos(unit = "Radians");
     line a2y = angle2.sin(unit = "Radians");
 
-    line circleCenter = player.eyeLocation.shiftOnVector(player.direction * 3);
+    line circleCenter = player.eyeLocation.shiftOnVector(player.direction * 2);
 
     line lineLength = 3;
 
@@ -30,12 +64,41 @@ function attack_melee() {
     line idx = 0;
     for(line tmp of path(corner1, corner2, step)) {
         line extraDist = num.sin((3.141/(2 * peak)) * idx, unit = "Radians") * (lineLength / 2);
-        print(extraDist, idx, peak);
         tmp = tmp.setDirection(player.eyeLocation.getDirection());
         tmp = tmp.shiftInDirection(extraDist);
-        player.displayParticleEffect(par("crit"), tmp);
+        allPlayers.displayParticleEffect(par("crit"), tmp);
         idx += 1;
-        if(idx % 20 == 0) {
+        if(idx % 10 == 0) {
+            wait(1);
+        }
+    }
+}
+
+function attack_shoot() {
+    line pos = player.eyeLocation;
+    line dy = 0;
+
+    for(line idx of range(1, 1000)) {
+        pos = pos.shiftOnVector(pos.getDirection() * 0.2);
+        if(idx % 2 == 0) {
+            dy -= 0.001;
+        }
+        if(dy < -0.08) {
+            dy = -0.08;
+        }
+        pos.y += dy;
+        allPlayers.displayParticleEffect(par("crit"), pos);
+
+        select allEntities();
+        filter byCondition(entity.isHitboxNearLocation(pos, 0.5));
+        if(game.selectionSize >= 1) {
+            selectedEntity.setInvulnerabilityTicks(0);
+            selectedEntity.damage(1, player.uuid);
+            break;
+        }
+        select reset();
+
+        if(idx % 10 == 0) {
             wait(1);
         }
     }
