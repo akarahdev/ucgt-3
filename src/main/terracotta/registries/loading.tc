@@ -1,4 +1,4 @@
-function registries_init() {
+function registriesInit() {
     allPlayers.teleport(loc(0, 50, 0));
 
     line pageSize = 10;

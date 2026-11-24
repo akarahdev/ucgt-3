@@ -3,7 +3,7 @@ gameevent startup {
     declare global webUrl: str = "http://bigcircl.akarah.net";
 
     enqueueInit();
-    registries_init();
+    registriesInit();
 }
 
 playerevent join {
