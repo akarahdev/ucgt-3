@@ -1,11 +1,65 @@
 function getBanner(id: str): {
     name: str,
     cost: num,
+    camera: { x: num, y: num, z: num, pitch: num, yaw: num },
     weights: dict[num]
 } {
     return global "registry.banner.%var(id)" as {
         name: str,
         cost: num,
+        camera: { x: num, y: num, z: num, pitch: num, yaw: num },
         weights: dict[num]
     };
+}
+
+function openBanner(id: str) {
+    line bannerType = getBanner(id);
+
+    global "%uuid oldLocation" = player.location;
+    player.setToSpectatorMode();
+    player.teleport(loc(
+        bannerType["camera"]["x"],
+        bannerType["camera"]["y"],
+        bannerType["camera"]["z"],
+        bannerType["camera"]["pitch"],
+        bannerType["camera"]["yaw"]
+    ));
+
+    line menu = dialog.create(
+        "banner",
+        txt.parseExpression("<green>" + bannerType["name"]),
+        afterAction = "None",
+        type = "Confirmation",
+        canClose = "False"
+    );
+
+    line weightSum = 0;
+    for(line key, line val of bannerType["weights"]) {
+        weightSum += val;
+    }
+    for(line key, line val of bannerType["weights"]) {
+        line itemType = getItemType(key);
+        menu.addBodyText(
+            txt.parseExpression(
+                "<white>" + itemType["name"]
+                + "<dark_gray> - <red>"
+                + ((val / weightSum) * 100) + "%"
+            )
+        );
+    }
+
+    menu.addButton(s"<red>Exit", "exit");
+    menu.addButton(s"<yellow>Roll", "roll");
+
+    player.openDialog(menu);
+}
+
+function clickBannerDialog() {
+    if(event.clickedDialogId == "banner") {
+        if(event.clickedButtonId == "exit") {
+            player.closeInventory();
+            player.teleport(global "%uuid oldLocation" as loc);
+            player.setToAdventureMode();
+        }
+    }
 }

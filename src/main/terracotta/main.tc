@@ -17,6 +17,7 @@ gameevent startup {
     plotReady = 1;
 
     start healthCheckTask();
+    start gameLoop();
 }
 
 playerevent join {
@@ -52,6 +53,21 @@ process virtualJoin() {
     if(bow != "") {
         player.setItemInSlot(buildItemFromType(bow), 2);
     }
+}
+
+process gameLoop {
+    repeat {
+        select allPlayers();
+        start playerLoop(targetMode = "For each in selection");
+        select reset();
+
+        wait(1);
+    }
+}
+
+process playerLoop {
+    line coins = playerGetCoins(player.uuid);
+    player.sendActionBar(txt.parseExpression("<gray>Coins: <green>" + coins));
 }
 
 playerevent command {
@@ -105,6 +121,10 @@ playerevent rightClick {
         event.cancel();
         openStorageMenu();
     }
+    if(game.blockEquals(event.blockLocation, item("blast_furnace"))) {
+        event.cancel();
+        openBanner("1");
+    }
 }
 
 playerevent clickMenuSlot {
@@ -113,4 +133,28 @@ playerevent clickMenuSlot {
 
 playerevent clickInventorySlot {
     event.cancel();
+}
+
+playerevent damageEntity {
+    line health = victimEntity.getTag("health") as num;
+    health -= event.damage;
+    victimEntity.setTag("health", health);
+    health = health.floor();
+    victimEntity.setCustomName(s"<red>%var(health)❤");
+    if(health <= 0.01) {
+        event.setDamage(100000000);
+        victimEntity.setCustomName();
+        victimEntity.setNameVisible(visibility = "Never");
+    } else {
+        event.setDamage(0.001);
+    }
+}
+
+playerevent killMob {
+    line reward = victimEntity.getTag("reward") as num;
+    playerSetCoins(player.uuid, playerGetCoins(player.uuid) + reward);
+}
+
+playerevent clickDialogButton {
+    clickBannerDialog();
 }

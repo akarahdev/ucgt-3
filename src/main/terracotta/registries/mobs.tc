@@ -1,11 +1,13 @@
 function getMobType(id: str): {
     name: str,
     type: str,
+    reward: num,
     stats: dict[num]
 } {
     return global "registry.mob_type.%var(id)" as {
         name: str,
         type: str,
+        reward: num,
         stats: dict[num]
     };
 }
@@ -19,6 +21,12 @@ function spawnMobFromType(id: str, position: loc): str {
     select entitiesByUUID(uuid);
     selectedEntity.setEquipmentItem(item("acacia_button"), slot = "Head");
     selectedEntity.setDeathDropsEnabled(spawnDrops = "Disable");
+    selectedEntity.setTag("reward", mobType["reward"]);
+
+    line hp = mobType["stats"]["max_health"];
+    selectedEntity.setTag("health", hp);
+    selectedEntity.setCustomName(s"<red>%var(hp)❤");
+
     select reset();
 
     return uuid;

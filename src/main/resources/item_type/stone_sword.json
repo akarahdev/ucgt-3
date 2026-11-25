@@ -1,8 +1,0 @@
-{
-  "name": "Stone Sword",
-  "type": "sword",
-  "model": "minecraft:stone_sword",
-  "stats": {
-    "attack_damage": 7
-  }
-}

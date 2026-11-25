@@ -3,7 +3,6 @@ package dev.akarah.ucgt.web.player;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class PlayerController {
             @PathVariable UUID uuid,
             @RequestBody PlayerData playerData
     ) {
-        jdbcClient.sql("INSERT INTO players (player, username) VALUES (:uuid, :username)")
+        jdbcClient.sql("INSERT INTO players (player, username) VALUES (:uuid, :username) ON DUPLICATE KEY UPDATE username = :username")
                 .param("uuid", playerData.uuid())
                 .param("username", playerData.username())
                 .update();

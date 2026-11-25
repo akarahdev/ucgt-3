@@ -1,6 +1,7 @@
 {
   "name": "Zombie",
   "type": "zombie",
+  "reward": 10,
   "stats": {
     "attack_damage": 10,
     "max_health": 100

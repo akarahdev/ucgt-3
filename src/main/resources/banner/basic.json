@@ -1,8 +1,0 @@
-{
-  "name": "Basic Factory",
-  "cost": 100,
-  "weights": {
-    "wooden_sword": 5,
-    "wooden_bow": 5
-  }
-}

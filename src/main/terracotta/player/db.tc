@@ -13,3 +13,23 @@ function playerSetData(uuid: str, username: str) {
         { uuid: uuid, username: username }
     );
 }
+
+function playerGetCoins(uuid: str): num {
+    if(game.hasPlayer(uuid) && !var.exists(global "%var(uuid) coins")) {
+        global "%var(uuid) coins" = enqueueRequestBlocking(
+            "GET",
+            "/v1/coins/" + uuid,
+            {}
+        ) as num;
+    }
+    return global "%var(uuid) coins" as num;
+}
+
+function playerSetCoins(uuid: str, amount: num) {
+    global "%var(uuid) coins" = amount;
+    enqueueRequestAndForget(
+        "POST",
+        "/v1/coins/" + uuid + "?amount=" + amount,
+        {}
+    );
+}

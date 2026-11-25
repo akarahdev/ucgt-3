@@ -1,0 +1,9 @@
+{
+  "name": "Free Coins",
+  "type": "skeleton",
+  "reward": 1000,
+  "stats": {
+    "attack_damage": 10,
+    "max_health": 1
+  }
+}

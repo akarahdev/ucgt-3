@@ -23,3 +23,10 @@ CREATE TABLE IF NOT EXISTS players (
 );
 
 CREATE INDEX IF NOT EXISTS idx_player_data ON players (player);
+
+CREATE TABLE IF NOT EXISTS coins (
+    player UUID PRIMARY KEY,
+    amount INT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_player_coins ON coins (player);
