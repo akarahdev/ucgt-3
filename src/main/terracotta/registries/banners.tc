@@ -12,9 +12,18 @@ function getBanner(id: str): {
     };
 }
 
+function executeRoll(uuid: str, banner: str, count: num = 1): list[str] {
+    return enqueueRequestBlocking(
+        "GET",
+        "/v1/roll/" + uuid + "/" + banner + "?count=" + count,
+        {}
+    ) as list[str];
+}
+
 function openBanner(id: str) {
     line bannerType = getBanner(id);
 
+    global "%uuid openBanner" = id;
     global "%uuid oldLocation" = player.location;
     player.setToSpectatorMode();
     player.teleport(loc(
@@ -60,6 +69,23 @@ function clickBannerDialog() {
             player.closeInventory();
             player.teleport(global "%uuid oldLocation" as loc);
             player.setToAdventureMode();
+        }
+        if(event.clickedButtonId == "roll") {
+            line openBanner = getBanner(global "%uuid openBanner" as str);
+            if(playerGetCoins(player.uuid) > openBanner["cost"]) {
+                playerSetCoins(player.uuid, playerGetCoins(player.uuid) - openBanner["cost"]);
+
+                line items = executeRoll(player.uuid, global "%uuid openBanner" as str, 1);
+                print(items);
+
+                player.closeInventory();
+                player.teleport(global "%uuid oldLocation" as loc);
+                player.setToAdventureMode();
+            } else {
+                player.sendMessage(s"<red>Error: <gray>You can't afford that!");
+            }
+
+
         }
     }
 }
