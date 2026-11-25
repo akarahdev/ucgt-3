@@ -20,7 +20,6 @@ function buildItemFromType(id: str): item {
     line i = item("music_disc_cat");
     i = i.setName(txt.parseExpression("<white>" + itemType["name"]));
     i = i.setTag("id", id);
-    print(itemType);
     i = i.setTag("type", itemType["type"]);
     i = i.setModel(itemType["model"]);
     i = i.setHiddenComponents("minecraft:music_disc");

@@ -32,7 +32,7 @@ function enqueueRequestBlocking(
 
 
 
-function enqueue_request_and_forget(
+function enqueueRequestAndForget(
     method: str,
     path: str,
     body: dict

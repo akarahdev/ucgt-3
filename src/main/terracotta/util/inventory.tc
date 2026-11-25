@@ -1,0 +1,25 @@
+function inventoryCreate(rows: num): { __inv: any } {
+    line slots = 9 * rows;
+    line lst = [];
+    for(line idx of range(1, slots)) {
+        lst.append(item("air"));
+    }
+
+    return { __inv: lst };
+}
+
+function inventorySetSlot(inv: var[{ __inv: any }], slot: num, value: item) {
+   (inv["__inv"] as list[item])[slot] = value;
+}
+
+function inventoryGetSlot(inv: var[{ __inv: any }], slot: num): item {
+    return (inv["__inv"] as list[item])[slot];
+}
+
+function inventoryOpen(inv: {__inv: any}) {
+    line items = inv["__inv"] as list[item];
+    player.showInventoryMenu(items.trim(1, 27));
+    if(items.len() > 27) {
+        player.expandInventoryMenu(items.trim(28, 54));
+    }
+}

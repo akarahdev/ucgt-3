@@ -1,17 +1,3 @@
-playerevent leftClick {
-    if(player.mainHandItem.hasTag("type", "sword") && player.itemIsNotOnCooldown(player.mainHandItem)) {
-        player.setItemCooldown(player.mainHandItem, 10);
-        attackMelee();
-    }
-}
-
-playerevent rightClick {
-    if(player.mainHandItem.hasTag("type", "bow") && player.itemIsNotOnCooldown(player.mainHandItem)) {
-        player.setItemCooldown(player.mainHandItem, 10);
-        attackShoot();
-    }
-}
-
 function attackMelee() {
     line stats = calculateStats();
 

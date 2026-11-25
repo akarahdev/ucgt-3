@@ -1,0 +1,18 @@
+function storageMenu(): {__inv: any} {
+    line inventory = inventoryCreate(6);
+
+    line items = storageGet(player.uuid);
+
+    line slot = 0;
+    for(line i of items) {
+        slot += 1;
+        line instance = buildItemFromType(i["item"]);
+        inventorySetSlot(inventory, slot, instance);
+    }
+
+    return inventory;
+}
+
+function openStorageMenu() {
+    inventoryOpen(storageMenu());
+}

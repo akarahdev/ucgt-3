@@ -9,7 +9,8 @@ gameevent startup {
 playerevent join {
     player.setCombatAttribute(1024, attr = "Attack speed");
     player.setReachAttribute(0, attr = "Entity interaction range");
-    player.setReachAttribute(0, attr = "Block interaction range");
+    player.setReachAttribute(4, attr = "Block interaction range");
+    player.setToAdventureMode();
 }
 
 playerevent command {
@@ -21,6 +22,10 @@ playerevent command {
         line it = event.commandArguments[2];
         player.giveItems(buildItemFromType(it));
     }
+    if(event.commandArgumentEquals("store", 1)) {
+        line it = event.commandArguments[2];
+        storageAdd(player.uuid, it);
+    }
 }
 
 playerevent exhaustion {
@@ -29,4 +34,22 @@ playerevent exhaustion {
 
 playerevent swapHands {
     event.cancel();
+}
+
+playerevent leftClick {
+    if(player.mainHandItem.hasTag("type", "sword") && player.itemIsNotOnCooldown(player.mainHandItem)) {
+        player.setItemCooldown(player.mainHandItem, 10);
+        attackMelee();
+    }
+}
+
+playerevent rightClick {
+    if(player.mainHandItem.hasTag("type", "bow") && player.itemIsNotOnCooldown(player.mainHandItem)) {
+        player.setItemCooldown(player.mainHandItem, 10);
+        attackShoot();
+    }
+    if(game.blockEquals(event.blockLocation, item("chest"))) {
+        event.cancel();
+        openStorageMenu();
+    }
 }

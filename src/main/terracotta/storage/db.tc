@@ -1,0 +1,12 @@
+function storageGet(uuid: str): list[{id: num, item: str}] {
+    line data = enqueueRequestBlocking("GET", "/v1/storage/inventory/" + uuid, {})
+            as {items: list[{id: num, item: str}]};
+
+    line items = data["items"];
+
+    return items;
+}
+
+function storageAdd(uuid: str, id: str) {
+    enqueueRequestAndForget("POST", "/v1/storage/inventory/" + uuid + "?item=" + id, {});
+}
