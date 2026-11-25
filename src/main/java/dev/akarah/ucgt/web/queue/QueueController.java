@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class QueueController {
                         200,
                         reply
                 ));
-            } catch (HttpClientErrorException exception) {
+            } catch (HttpClientErrorException | HttpServerErrorException exception) {
                 responses.add(new QueueResponse(
                         entry.id(),
                         exception.getStatusCode().value(),

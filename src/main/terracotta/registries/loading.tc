@@ -1,7 +1,7 @@
 function registriesInit() {
     allPlayers.teleport(loc(0, 50, 0));
 
-    line pageSize = 10;
+    line pageSize = 4;
 
     declare global registries: dict[str] = {
         "item_type": "Item Type",
