@@ -16,3 +16,10 @@ CREATE TABLE IF NOT EXISTS equipment (
 );
 
 CREATE INDEX IF NOT EXISTS idx_player_equipment ON equipment (player);
+
+CREATE TABLE IF NOT EXISTS players (
+    player UUID PRIMARY KEY,
+    username VARCHAR(16)
+);
+
+CREATE INDEX IF NOT EXISTS idx_player_data ON players (player);

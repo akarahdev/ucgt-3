@@ -40,11 +40,11 @@ function getSlotItemId(uuid: str, slot: str): str {
         "GET",
         "v1/storage/equipment/" + slot + "/" + uuid,
         {}
-    ) as {items: list[{id: num, item: str}]};
+    ) as {id: num, item: str};
 
-    if(data["items"].len() == 0) {
+    if(var.equals(data, 0)) {
         return "";
     } else {
-        return data["items"][1]["item"];
+        return data["item"];
     }
 }

@@ -1,0 +1,15 @@
+function playerGetData(uuid: str): {uuid: str, username: str} {
+    return enqueueRequestBlocking(
+        "GET",
+        "/v1/player/" + uuid,
+        {}
+    ) as {uuid: str, username: str};
+}
+
+function playerSetData(uuid: str, username: str) {
+    enqueueRequestAndForget(
+        "POST",
+        "/v1/player/" + uuid,
+        { uuid: uuid, username: username }
+    );
+}

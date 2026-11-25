@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
@@ -30,22 +31,31 @@ public class QueueController {
                     .defaultHeader("User-Agent", userAgent)
                     .build();
 
-            String reply = client
-                    .method(HttpMethod.valueOf(entry.method()))
-                    .uri(entry.endpoint())
-                    .body(entry.body())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .body(String.class);
+            try {
+                String reply = client
+                        .method(HttpMethod.valueOf(entry.method()))
+                        .uri(entry.endpoint())
+                        .body(entry.body())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .retrieve()
+                        .body(String.class);
 
-            if(reply == null) {
-                reply = "";
+                if(reply == null) {
+                    reply = "";
+                }
+
+                responses.add(new QueueResponse(
+                        entry.id(),
+                        200,
+                        reply
+                ));
+            } catch (HttpClientErrorException exception) {
+                responses.add(new QueueResponse(
+                        entry.id(),
+                        exception.getStatusCode().value(),
+                        "0"
+                ));
             }
-
-            responses.add(new QueueResponse(
-                    entry.id(),
-                    reply
-            ));
         }
 
         return responses;

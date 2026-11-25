@@ -79,7 +79,7 @@ process handleWebQueue {
                 method = "Post",
                 contentType = "application/json"
             );
-            line respJson = rawResp["json"] as list[{id: num, body: str}];
+            line respJson = rawResp["json"] as list[{id: num, status: num, body: str}];
 
             for (line entry of respJson) {
                 global "enqueue.%entry(entry,id)" = var.fromJSON(entry["body"]);

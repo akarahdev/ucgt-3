@@ -5,6 +5,9 @@ gameevent startup {
     global plotReady: num = 0;
 
     enqueueInit();
+
+    enqueueRequestBlocking("GET", "/v1/meow", {});
+
     registriesInit();
 
     select allPlayers();
@@ -27,6 +30,13 @@ playerevent join {
 }
 
 process virtualJoin() {
+    line playerData = playerGetData(player.uuid);
+    playerSetData(player.uuid, player.name.clearFormatting());
+    if(var.equals(playerData, 0)) {
+        storageAdd(player.uuid, "wooden_sword");
+        return;
+    }
+
     line sword = storageGetSword(player.uuid);
     if(sword != "") {
         player.setItemInSlot(buildItemFromType(sword), 1);
@@ -65,6 +75,8 @@ playerevent leftClick {
     if(player.mainHandItem.hasTag("type", "sword") && player.itemIsNotOnCooldown(player.mainHandItem)) {
         player.setItemCooldown(player.mainHandItem, 10);
         attackMelee();
+        event.cancel();
+        endthread;
     }
 }
 
@@ -72,6 +84,8 @@ playerevent rightClick {
     if(player.mainHandItem.hasTag("type", "bow") && player.itemIsNotOnCooldown(player.mainHandItem)) {
         player.setItemCooldown(player.mainHandItem, 10);
         attackShoot();
+        event.cancel();
+        endthread;
     }
     if(game.blockEquals(event.blockLocation, item("chest"))) {
         event.cancel();
