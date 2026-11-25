@@ -79,6 +79,9 @@ process handleWebQueue {
                 method = "Post",
                 contentType = "application/json"
             );
+            if(var.equals(rawResp, 0) || rawResp["status"] == 404) {
+                failHealth();
+            }
             line respJson = rawResp["json"] as list[{id: num, status: num, body: str}];
 
             for (line entry of respJson) {
