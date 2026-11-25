@@ -7,6 +7,7 @@ function storageMenu(): {__inv: any} {
     for(line i of items) {
         slot += 1;
         line instance = buildItemFromType(i["item"]);
+        instance = instance.setTag("storage.store_to_slot", i["id"]);
         inventorySetSlot(inventory, slot, instance);
     }
 
@@ -15,4 +16,21 @@ function storageMenu(): {__inv: any} {
 
 function openStorageMenu() {
     inventoryOpen(storageMenu());
+}
+
+function storageMenuClick() {
+    if(event.item.hasTag("storage.store_to_slot")) {
+        line target = event.item.getTag("storage.store_to_slot") as num;
+        line targetId = event.item.getTag("id") as str;
+
+        if(event.item.hasTag("type", "sword")) {
+            storageSetSword(player.uuid, target);
+            player.setItemInSlot(buildItemFromType(targetId), 1);
+        }
+
+        if(event.item.hasTag("type", "bow")) {
+            storageSetBow(player.uuid, target);
+            player.setItemInSlot(buildItemFromType(targetId), 2);
+        }
+    }
 }

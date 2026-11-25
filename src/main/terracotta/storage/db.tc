@@ -10,3 +10,41 @@ function storageGet(uuid: str): list[{id: num, item: str}] {
 function storageAdd(uuid: str, id: str) {
     enqueueRequestAndForget("POST", "/v1/storage/inventory/" + uuid + "?item=" + id, {});
 }
+
+function storageSetSword(uuid: str, itemRef: num) {
+    setSlot(uuid, itemRef, "sword");
+}
+
+function storageGetSword(uuid: str): str {
+    return getSlotItemId(uuid, "sword");
+}
+
+function storageSetBow(uuid: str, itemRef: num) {
+    setSlot(uuid, itemRef, "bow");
+}
+
+function storageGetBow(uuid: str): str {
+    return getSlotItemId(uuid, "bow");
+}
+
+function setSlot(uuid: str, itemRef: num, slot: str) {
+    enqueueRequestAndForget(
+        "POST",
+        "v1/storage/equipment/" + slot + "/" + uuid + "?item=" + itemRef,
+        {}
+    );
+}
+
+function getSlotItemId(uuid: str, slot: str): str {
+    line data = enqueueRequestBlocking(
+        "GET",
+        "v1/storage/equipment/" + slot + "/" + uuid,
+        {}
+    ) as {items: list[{id: num, item: str}]};
+
+    if(data["items"].len() == 0) {
+        return "";
+    } else {
+        return data["items"][1]["item"];
+    }
+}

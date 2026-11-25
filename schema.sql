@@ -8,3 +8,11 @@ CREATE TABLE IF NOT EXISTS inventory_slots (
 );
 
 CREATE INDEX IF NOT EXISTS idx_player_slots ON inventory_slots (player);
+
+CREATE TABLE IF NOT EXISTS equipment (
+    player UUID PRIMARY KEY,
+    sword INT,
+    bow INT
+);
+
+CREATE INDEX IF NOT EXISTS idx_player_equipment ON equipment (player);

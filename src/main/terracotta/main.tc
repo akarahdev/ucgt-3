@@ -2,8 +2,16 @@ gameevent startup {
     declare global port: num = 37615;
     declare global webUrl: str = "http://bigcircl.akarah.net";
 
+    global plotReady: num = 0;
+
     enqueueInit();
     registriesInit();
+
+    select allPlayers();
+    start virtualJoin(targetMode = "For each in selection");
+    select reset();
+
+    plotReady = 1;
 }
 
 playerevent join {
@@ -11,6 +19,23 @@ playerevent join {
     player.setReachAttribute(0, attr = "Entity interaction range");
     player.setReachAttribute(4, attr = "Block interaction range");
     player.setToAdventureMode();
+
+    global plotReady: num;
+    if(plotReady == 1) {
+        start virtualJoin();
+    }
+}
+
+process virtualJoin() {
+    line sword = storageGetSword(player.uuid);
+    if(sword != "") {
+        player.setItemInSlot(buildItemFromType(sword), 1);
+    }
+
+    line bow = storageGetBow(player.uuid);
+    if(bow != "") {
+        player.setItemInSlot(buildItemFromType(bow), 2);
+    }
 }
 
 playerevent command {
@@ -52,4 +77,12 @@ playerevent rightClick {
         event.cancel();
         openStorageMenu();
     }
+}
+
+playerevent clickMenuSlot {
+    storageMenuClick();
+}
+
+playerevent clickInventorySlot {
+    event.cancel();
 }

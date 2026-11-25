@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -19,20 +20,21 @@ public class InventoryController {
     }
 
     @GetMapping("/inventory/{uuid}")
-    public Inventory getForPlayer(@PathVariable UUID uuid) {
-        JdbcClient.ResultQuerySpec spec = jdbcClient.sql("SELECT id, item FROM inventory_slots WHERE player = ?")
-                .params(uuid)
-                .query();
-        Inventory inv = new Inventory(
-                spec.listOfRows().stream()
-                        .map(x -> new InventorySlot(
-                                (int) Objects.requireNonNull(x.get("id")),
-                                (String) x.get("item")
-                        ))
-                        .toList()
+    public Inventory getInvForPlayer(@PathVariable UUID uuid) {
+        return getFromSpec(
+                jdbcClient.sql("SELECT id, item FROM inventory_slots WHERE player = ?")
+                        .params(uuid)
+                        .query()
         );
-        LoggerFactory.getLogger(InventoryController.class).info(inv.toString());
-        return inv;
+    }
+
+    @GetMapping("/inventory/{uuid}/{id}")
+    public Inventory getSlotForPlayer(@PathVariable UUID uuid, @PathVariable int id) {
+        return getFromSpec(
+                jdbcClient.sql("SELECT id, item FROM inventory_slots WHERE player = ? AND id = ?")
+                        .params(uuid, id)
+                        .query()
+        );
     }
 
     @PostMapping("/inventory/{uuid}")
@@ -43,7 +45,68 @@ public class InventoryController {
         jdbcClient.sql("INSERT INTO inventory_slots (player, item) VALUES (?, ?)")
                 .params(uuid, item)
                 .update();
-        LoggerFactory.getLogger(InventoryController.class).info(uuid.toString());
-        LoggerFactory.getLogger(InventoryController.class).info(item);
+    }
+
+    @PostMapping("/equipment/sword/{uuid}")
+    public void putItemInSwordSlot(
+            @PathVariable UUID uuid,
+            @RequestParam int item
+    ) {
+        jdbcClient.sql("INSERT INTO equipment (player, sword) VALUES (:uuid, :item) ON DUPLICATE KEY UPDATE sword = :item")
+                .param("uuid", uuid)
+                .param("item", item)
+                .update();
+    }
+
+    @GetMapping("/equipment/sword/{uuid}")
+    public Inventory getItemInSwordSlot(
+            @PathVariable UUID uuid
+    ) {
+        return getFromSpec(
+                jdbcClient.sql("""
+                SELECT id, item FROM inventory_slots
+                WHERE player = :uuid
+                AND id IN (SELECT sword FROM equipment WHERE equipment.player = :uuid)
+                """)
+                        .param("uuid", uuid)
+                        .query()
+        );
+    }
+
+    @PostMapping("/equipment/bow/{uuid}")
+    public void putItemInBowSlot(
+            @PathVariable UUID uuid,
+            @RequestParam int item
+    ) {
+        jdbcClient.sql("INSERT INTO equipment (player, bow) VALUES (:uuid, :item) ON DUPLICATE KEY UPDATE bow = :item")
+                .param("uuid", uuid)
+                .param("item", item)
+                .update();
+    }
+
+    @GetMapping("/equipment/bow/{uuid}")
+    public Inventory getItemInBowSlot(
+            @PathVariable UUID uuid
+    ) {
+        return getFromSpec(
+                jdbcClient.sql("""
+                SELECT id, item FROM inventory_slots
+                WHERE player = :uuid
+                AND id IN (SELECT bow FROM equipment WHERE equipment.player = :uuid)
+                """)
+                        .param("uuid", uuid)
+                        .query()
+        );
+    }
+
+    private Inventory getFromSpec(JdbcClient.ResultQuerySpec spec) {
+        return new Inventory(
+                spec.listOfRows().stream()
+                        .map(x -> new InventorySlot(
+                                (int) Objects.requireNonNull(x.get("id")),
+                                (String) x.get("item")
+                        ))
+                        .toList()
+        );
     }
 }
