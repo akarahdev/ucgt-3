@@ -1,0 +1,15 @@
+function checkHealth() {
+    line healthiness = enqueueRequestBlocking("GET", "/v1/health", {});
+    if(var.equals(healthiness, 0)) {
+        allPlayers.sendMessage(s"<red>Error: <gray>Backend server is unreachable, removing players from the plot.");
+        allPlayers.playSound(snd("entity.iron_golem.hurt"));
+        allPlayers.kick();
+    }
+}
+
+process healthCheckTask() {
+    repeat {
+        checkHealth();
+        wait(60);
+    }
+}

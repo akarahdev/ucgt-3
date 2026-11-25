@@ -1,5 +1,5 @@
 gameevent startup {
-    declare global port: num = 37615;
+    declare global port: num = 39002;
     declare global webUrl: str = "http://bigcircl.akarah.net";
 
     global plotReady: num = 0;
@@ -15,6 +15,8 @@ gameevent startup {
     select reset();
 
     plotReady = 1;
+
+    start healthCheckTask();
 }
 
 playerevent join {
@@ -22,6 +24,8 @@ playerevent join {
     player.setReachAttribute(0, attr = "Entity interaction range");
     player.setReachAttribute(4, attr = "Block interaction range");
     player.setToAdventureMode();
+
+    checkHealth();
 
     global plotReady: num;
     if(plotReady == 1) {
