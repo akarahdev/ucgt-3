@@ -1,5 +1,5 @@
 gameevent startup {
-    declare global port: num = 39002;
+    declare global port: num = 37036;
     declare global webUrl: str = "http://bigcircl.akarah.net";
 
     global plotReady: num = 0;
@@ -123,7 +123,10 @@ playerevent rightClick {
     }
     if(game.blockEquals(event.blockLocation, item("blast_furnace"))) {
         event.cancel();
-        openBanner("1");
+        if(!var.exists(global "%uuid selectedBanner")) {
+            global "%uuid selectedBanner" = "basic";
+        }
+        openBanner(global "%uuid selectedBanner" as str);
     }
 }
 

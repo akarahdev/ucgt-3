@@ -24,7 +24,10 @@ function openBanner(id: str) {
     line bannerType = getBanner(id);
 
     global "%uuid openBanner" = id;
-    global "%uuid oldLocation" = player.location;
+    if(!(var.exists(global "%uuid oldLocation"))) {
+        global "%uuid oldLocation" = player.location;
+    }
+
     player.setToSpectatorMode();
     player.teleport(loc(
         bannerType["camera"]["x"],
@@ -38,7 +41,7 @@ function openBanner(id: str) {
         "banner",
         txt.parseExpression("<green>" + bannerType["name"]),
         afterAction = "None",
-        type = "Confirmation",
+        type = "Multi Action",
         canClose = "False"
     );
 
@@ -57,18 +60,41 @@ function openBanner(id: str) {
         );
     }
 
-    menu.addButton(s"<red>Exit", "exit");
-    menu.addButton(s"<yellow>Roll", "roll");
+    menu.addButton(s"←", "left", 20);
+    menu.addButton(s"<red>Exit", "exit", 80);
+    menu.addButton(s"<yellow>Roll", "roll", 80);
+    menu.addButton(s"→", "right", 20);
+
+    menu.setColumnCount(4);
 
     player.openDialog(menu);
 }
 
 function clickBannerDialog() {
+    line banners: list[str] = [
+        "basic",
+        "grasslands"
+    ];
     if(event.clickedDialogId == "banner") {
+        if(event.clickedButtonId == "left") {
+            line idx = banners.find(global "%uuid selectedBanner" as str);
+            line nextIdx = num.wrap(idx - 1, 1, banners.len() + 1);
+            global "%uuid selectedBanner" = banners[nextIdx];
+            openBanner(global "%uuid selectedBanner" as str);
+            return;
+        }
+        if(event.clickedButtonId == "right") {
+            line idx = banners.find(global "%uuid selectedBanner" as str);
+            line nextIdx = num.wrap(idx + 1, 1, banners.len() + 1);
+            global "%uuid selectedBanner" = banners[nextIdx];
+            openBanner(global "%uuid selectedBanner" as str);
+            return;
+        }
         if(event.clickedButtonId == "exit") {
             player.closeInventory();
             player.teleport(global "%uuid oldLocation" as loc);
             player.setToAdventureMode();
+            var.purgeMatching("%uuid oldLocation", matchRequirement = "Entire name");
         }
         if(event.clickedButtonId == "roll") {
             line openBanner = getBanner(global "%uuid openBanner" as str);
@@ -81,11 +107,10 @@ function clickBannerDialog() {
                 player.closeInventory();
                 player.teleport(global "%uuid oldLocation" as loc);
                 player.setToAdventureMode();
+                var.purgeMatching("%uuid oldLocation", matchRequirement = "Entire name");
             } else {
                 player.sendMessage(s"<red>Error: <gray>You can't afford that!");
             }
-
-
         }
     }
 }
