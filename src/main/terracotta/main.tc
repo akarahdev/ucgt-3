@@ -83,6 +83,30 @@ playerevent command {
         line it = event.commandArguments[2];
         storageAdd(player.uuid, it);
     }
+    if(event.commandArgumentEquals("p1", 1)) {
+        global "%uuid schematics.pos1" = player.targetBlockLocation.align();
+    }
+    if(event.commandArgumentEquals("p2", 1)) {
+        global "%uuid schematics.pos2" = player.targetBlockLocation.align();
+    }
+
+    if(event.commandArgumentEquals("schemsave", 1)) {
+        line idx = 0;
+
+        global "%uuid lastSchematic" =  save(
+            global "%uuid schematics.pos1" as loc,
+            global "%uuid schematics.pos2" as loc
+        );
+
+        for(line str of global "%uuid lastSchematic") {
+            player.sendMessage(txt.parseExpression('<click:copy_to_clipboard:"%var(str)">%var(idx)</click>', allowed = "Full"));
+            idx++;
+        }
+    }
+
+    if(event.commandArgumentEquals("schemload", 1)) {
+        place(player.location - vec(0, 0.5, 0), global "%uuid lastSchematic" as list[str]);
+    }
 }
 
 playerevent exhaustion {
