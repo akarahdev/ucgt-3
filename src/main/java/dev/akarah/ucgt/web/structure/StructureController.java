@@ -15,6 +15,6 @@ public class StructureController {
 
     @GetMapping("/v1/structure/{id}")
     public DFStructure get(@PathVariable String id) {
-        return DFStructure.of(VanillaStructure.of(structureManager.getStructure(id)));
+        return structureManager.getStructure(id);
     }
 }

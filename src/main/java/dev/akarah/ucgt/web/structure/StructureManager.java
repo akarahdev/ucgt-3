@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Component
 public class StructureManager {
-    private Map<String, CompoundTag> nbtStructures = new HashMap<>();
+    private Map<String, DFStructure> nbtStructures = new HashMap<>();
     private static final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
     public StructureManager() {
@@ -44,7 +44,12 @@ public class StructureManager {
                     }
 
                     CompoundTag data = (CompoundTag) NBTUtil.read(tmp).getTag();
-                    nbtStructures.put(id, data);
+                    VanillaStructure vanilla = VanillaStructure.of(data);
+                    DFStructure dfStructure = DFStructure.of(vanilla);
+                    nbtStructures.put(id, dfStructure);
+
+                    System.out.println(id);
+                    System.out.println(dfStructure);
                 }
             }
         } catch (IOException e) {
@@ -52,7 +57,7 @@ public class StructureManager {
         }
     }
 
-    public CompoundTag getStructure(String id) {
+    public DFStructure getStructure(String id) {
         System.out.println(this.nbtStructures.keySet());
         return this.nbtStructures.get(id);
     }
