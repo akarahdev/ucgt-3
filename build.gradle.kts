@@ -9,6 +9,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://jitpack.io/") }
 }
 
 dependencies {
@@ -21,6 +22,8 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.mariadb.jdbc:mariadb-java-client")
+
+    implementation("com.github.Querz:NBT:6.1")
 }
 
 tasks.test {

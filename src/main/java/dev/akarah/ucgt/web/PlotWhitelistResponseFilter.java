@@ -23,8 +23,17 @@ public class PlotWhitelistResponseFilter extends OncePerRequestFilter {
 
     private static final String ALLOWED_PLOT = "Hypercube/9.0 (374331, Endistic)";
 
+    private boolean enabled() {
+        return false;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if(!enabled()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String ip = request.getRemoteAddr();
         if(!ALLOWED_IP_ADDRESSES.contains(ip.trim())) {
             LoggerFactory.getLogger(PlotWhitelistResponseFilter.class)
