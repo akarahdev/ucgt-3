@@ -43,13 +43,23 @@ public class StructureManager {
                         os.write(in.readAllBytes());
                     }
 
-                    CompoundTag data = (CompoundTag) NBTUtil.read(tmp).getTag();
-                    VanillaStructure vanilla = VanillaStructure.of(data);
-                    DFStructure dfStructure = DFStructure.of(vanilla);
-                    nbtStructures.put(id, dfStructure);
+                    // vanilla structure
+                    if(relative.endsWith(".nbt")) {
+                        CompoundTag data = (CompoundTag) NBTUtil.read(tmp).getTag();
+                        VanillaStructure vanilla = VanillaStructure.of(data);
+                        DFStructure dfStructure = DFStructure.of(vanilla);
+                        nbtStructures.put(id, dfStructure);
+                    }
+                    if(relative.endsWith(".litematic")) {
+                        CompoundTag data = (CompoundTag) NBTUtil.read(tmp).getTag();
+                        LitematicaStructure vanilla = LitematicaStructure.of(data);
+                        DFStructure dfStructure = DFStructure.of(vanilla);
+                        nbtStructures.put(id, dfStructure);
+                    }
+
+
 
                     System.out.println(id);
-                    System.out.println(dfStructure);
                 }
             }
         } catch (IOException e) {

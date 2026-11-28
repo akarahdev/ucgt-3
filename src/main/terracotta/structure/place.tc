@@ -20,7 +20,7 @@ function place(id: str, position: loc) {
     }
 
     for(line blockLine of structure["blockData"]) {
-        line splitted = blockLine.split(";");
+        line splitted = blockLine.split("|");
         for(line elem of splitted) {
             line subsplit = elem.split(",");
 
